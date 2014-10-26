@@ -42,6 +42,9 @@ describe(Support.getTestDialectTeaser("Sequelize#transaction"), function () {
             case 'sqlite':
               query = 'select sqlite3_sleep(2000);';
               break;
+            case 'mssql':
+              query = "WAITFOR DELAY '00:00:02'";
+              break;
             default:
               break;
             }
@@ -62,9 +65,10 @@ describe(Support.getTestDialectTeaser("Sequelize#transaction"), function () {
               return Promise.delay(1000);
             }).then(function () {
               return sequelize.query(query, null, {
-                raw: true,
-                plain: true,
-                transaction: t
+                raw:         true,
+                plain:       true,
+                transaction: t,
+                type:        Support.Sequelize.QueryTypes.INSERT
               });
             }).then(function () {
               return t.commit();
